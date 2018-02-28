@@ -64,7 +64,7 @@ sub run {
                             MODEL => $model,
                             DESCRIPTION => 'SATA',
                             TYPE => 'disk',
-                            DISKSIZE => $size,
+                            DISKSIZE => $hd->{DISKSIZE},
                             SERIALNUMBER => $serialnumber,
                             FIRMWARE => $firmware,
                         });
