@@ -48,7 +48,7 @@ sub run {
             while (<PATH>) {
                 ($host, $count) = (1, $count+1) if /^Host:\sscsi$hd->{SCSI_COID}.*/;
                 if ($host) {
-                    if ((/.*Model:\s(\S+).*Rev:\s(\S+).*/) and ($1 !~ 'raid.*')) {
+                    if ((/.*Model:\s(\S+).*Rev:\s(\S+).*/) and ($1 !~ '[raid|sys|data].*')) {
                         $model = $1;
                         $firmware = $2;
                         $manufacturer = Ocsinventory::Agent::Backend::OS::Linux::Storages::getManufacturer($model);
