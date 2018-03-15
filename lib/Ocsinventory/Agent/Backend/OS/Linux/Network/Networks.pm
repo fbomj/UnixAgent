@@ -193,9 +193,6 @@ sub run {
                     $basedev=$1;
                     $type="alias";
                     $virtualdev=1;
-                    $common->addNetwork({
-                        BASE => $basedev
-                    });
                 }
 
                 # Check if this is a bonding slave
@@ -203,9 +200,6 @@ sub run {
                     $slave=getslaves($description);
                     $type="aggregate";
                     $virtualdev=1;
-                    $common->addNetwork({
-                        SLAVE => $slave
-                    });
                 }
 
                 if ($description && $ipaddress) {
@@ -230,6 +224,7 @@ sub run {
                         });
                     } else {
                         $common->addNetwork({
+                            BASE => $basedev ? $basedev : undef,
                             DESCRIPTION => $description,
                             DRIVER => $driver,
                             IPADDRESS => $ipaddress,
@@ -245,10 +240,12 @@ sub run {
                             DUPLEX => $duplex?"Full":"Half",
                             SPEED => $speed,
                             MTU => $mtu,
+                            SLAVE => $slave?$slave : undef,
                         });
                     }
                 } elsif ($description && $ipaddress6) {
                     $common->addNetwork({
+                        BASE => $basedev ? $basedev : undef,
                         DESCRIPTION => $description,
                         DRIVER => $driver,
                         IPADDRESS => $ipaddress6,
@@ -264,11 +261,12 @@ sub run {
                         DUPLEX => $duplex?"Full":"Half",
                         SPEED => $speed,
                         MTU => $mtu,
+                        SLAVE => $slave?$slave : undef,
                     });
                 }
-                $description = $driver = $ipaddress = $ipgateway = $ipmask = $ipsubnet = $macaddr = $pcislot = $status = $type = $virtualdev = $speed = $duplex = $mtu = undef;
+                $description = $driver = $ipaddress = $ipgateway = $ipmask = $ipsubnet = $macaddr = $pcislot = $status = $type = $virtualdev = $speed = $duplex = $mtu = $basedev = $slave = undef;
             }
-            $description = $1 if ($line =~ /^\S+\s+(\S+(?<!:))/); # Interface name
+            $description = $1 if ($line =~ /^\d+:\s+([^:@]+)/); # Interface name
             if ($line =~ /inet ((?:\d{1,3}+\.){3}\d{1,3})\/(\d+)/i){
                 $ipaddress=$1;
                 $ipmask=getIPNetmask($2);
