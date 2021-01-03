@@ -49,6 +49,16 @@ sub run {
         chomp($version);
     }
 
+    # Gentoo exact version number is set in /etc/gentoo-release file
+    if (-r "/etc/gentoo-release") {
+        open V, "/etc/gentoo-release" or warn;
+        foreach (<V>) {
+            $version = $1 if ($_ =~ /(\d+\.\d+)./g);
+        }
+        close V;
+        chomp($version);
+    }
+
     $common->setHardware({
         OSNAME => "$name $version",
         OSVERSION => $version,
